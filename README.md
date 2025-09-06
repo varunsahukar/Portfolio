@@ -1,6 +1,6 @@
 # Personal Portfolio
 
-A professional portfolio website showcasing development skills and projects with a robust Node.js backend.
+A professional portfolio website showcasing development skills and projects.
 
 ## Technology Stack
 
