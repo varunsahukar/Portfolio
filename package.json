@@ -34,7 +34,8 @@
     "nodemon": "^3.0.2",
     "supertest": "^6.3.3"
   },
-  "engines": {
-  "node": "18.x"
+ "engines": {
+  "node": "24.x"
+
   }
 }
