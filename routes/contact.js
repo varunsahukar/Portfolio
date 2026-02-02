@@ -6,34 +6,36 @@ const router = express.Router();
 // Email transporter configuration
 const createTransporter = () => {
   if (process.env.EMAIL_SERVICE === 'Gmail') {
-    return nodemailer.createTransporter({
+    return nodemailer.createTransport({
       service: 'gmail',
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_APP_PASSWORD // Use App Password for Gmail
-      }
-    });
-  } else if (process.env.EMAIL_SERVICE === 'Outlook') {
-    return nodemailer.createTransporter({
-      service: 'outlook',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
-      }
-    });
-  } else {
-    // Custom SMTP
-    return nodemailer.createTransporter({
-      host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT || 587,
-      secure: process.env.SMTP_SECURE === 'true',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
+        pass: process.env.EMAIL_PASS
       }
     });
   }
+
+  if (process.env.EMAIL_SERVICE === 'Outlook') {
+    return nodemailer.createTransport({
+      service: 'outlook',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
+  }
+
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT) || 587,
+    secure: process.env.SMTP_SECURE === 'true',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    }
+  });
 };
+
 
 // Validation rules
 const contactValidation = [
@@ -174,13 +176,12 @@ Timestamp: ${new Date().toLocaleString()}
       message: 'Message sent successfully! I\'ll get back to you soon.'
     });
 
-  } catch (error) {
-    console.error('Email sending error:', error);
-    
-    const emailError = new Error('Failed to send email');
-    emailError.name = 'EmailError';
-    throw emailError;
-  }
+  }catch (error) {
+  console.error('🔥 Nodemailer error:', error);
+  const emailError = new Error(error.message || 'Failed to send email');
+  emailError.name = 'EmailError';
+  throw emailError;
+}
 });
 
 // Test email endpoint (for development)

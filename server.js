@@ -78,8 +78,8 @@ app.get('*', (req, res) => {
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  
+  console.error('🔥 ERROR:', err);
+
   if (err.name === 'ValidationError') {
     return res.status(400).json({
       success: false,
@@ -87,19 +87,20 @@ app.use((err, req, res, next) => {
       errors: err.errors
     });
   }
-  
+
   if (err.name === 'EmailError') {
     return res.status(500).json({
       success: false,
       message: 'Failed to send email. Please try again later.'
     });
   }
-  
+
   res.status(500).json({
     success: false,
     message: 'Something went wrong! Please try again later.'
   });
 });
+
 
 // 404 handler
 app.use((req, res) => {
