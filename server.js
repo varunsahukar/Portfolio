@@ -8,7 +8,7 @@ const path = require('path');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 // Import routes
 const contactRoutes = require('./routes/contact');
@@ -110,11 +110,23 @@ app.use((req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`🚀 Portfolio backend server running on port ${PORT}`);
   console.log(`📧 Email service: ${process.env.EMAIL_SERVICE || 'Gmail'}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
 });
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`❌ Port ${PORT} is already in use.`);
+    console.error('➡️ Try stopping other Node processes or change the port.');
+    process.exit(1);
+  } else {
+    console.error('Server error:', err);
+    process.exit(1);
+  }
+});
+
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
