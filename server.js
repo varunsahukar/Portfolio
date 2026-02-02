@@ -54,8 +54,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Serve static files from the portfolio HTML directory
-app.use(express.static(path.join(__dirname, 'protfolio-html')));
-
+app.use(express.static(__dirname));
 // API Routes
 app.use('/api/contact', contactRoutes);
 app.use('/api/analytics', analyticsRoutes);
@@ -73,7 +72,7 @@ app.get('/api/health', (req, res) => {
 
 // Serve the main HTML file for all routes (SPA support)
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'protfolio-html', 'index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // Error handling middleware
